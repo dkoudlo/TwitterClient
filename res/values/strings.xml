@@ -11,5 +11,6 @@
     <string name="title_activity_compose_tweet">Compose Tweet</string>
     <string name="ic_refresh">Refresh</string>
     <string name="ic_compose">Compose</string>
+    <string name="lbl_chars_left">Characters Left: 140</string>
 
 </resources>

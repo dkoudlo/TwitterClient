@@ -1,40 +1,55 @@
 package com.codepath.apps.mytwitterapp.models;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Tweet extends BaseModel {
+import com.activeandroid.Model;
 
+public class Tweet extends Model implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7625940712608996885L;
+	
 	private User user;
+	private String body;
+	private long uid;
+	private boolean favorited;
+	private boolean retweeted;
+	
+	public String getBody() {
+		return body;
+	}
+
+	public long getUid() {
+		return uid;
+	}
+
+	public boolean isFavorited() {
+		return favorited;
+	}
+
+	public boolean isRetweeted() {
+		return retweeted;
+	}
 
 	public User getUser() {
 		return user;
 	}
 
-	public String getBody() {
-		return getString("text");
-	}
-
-	public long getId() {
-		return getLong("id");
-	}
-
-	public boolean isFavorited() {
-		return getBoolean("favorited");
-	}
-
-	public boolean isRetweeted() {
-		return getBoolean("retweeted");
-	}
-
 	public static Tweet fromJson(JSONObject jo) {
 		Tweet tweet = new Tweet();
 		try {
-			tweet.jsonObject = jo;
+			tweet.body = jo.getString("text");
+        	tweet.uid = jo.getLong("id");
+        	tweet.favorited = jo.getBoolean("favorited");
+        	tweet.retweeted = jo.getBoolean("retweeted");
 			tweet.user = User.fromJson(jo.getJSONObject("user"));
 		} catch (Exception e) {
 			e.printStackTrace();

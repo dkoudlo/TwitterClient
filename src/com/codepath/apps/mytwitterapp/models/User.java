@@ -1,45 +1,67 @@
 package com.codepath.apps.mytwitterapp.models;
 
+import java.io.Serializable;
+
 import org.json.JSONObject;
 
-public class User extends BaseModel {
+public class User extends BaseModel implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2502747785623338902L;
+	private String name;
+	private long uid;
+	private String screenName;
+	private String profileImageUrl;
+	private String profileBgImageUrl;
+	private int numTweets;
+	private int followersCount;
+	private int friendsCount;
+	
 	public String getName() {
-		return getString("name");
+		return name;
 	}
-
-	public long getId() {
-		return getLong("id");
+	
+	public long getUid() {
+		return uid;
 	}
 
 	public String getScreenName() {
-		return getString("screen_name");
+		return screenName;
 	}
 
 	public String getProfileImageUrl() {
-		return getString("profile_image_url");
+		return profileImageUrl;
 	}
 
-	public String getProfileBackGroundImageUrl() {
-		return getString("profile_background_image_url");
+	public String getProfileBgImageUrl() {
+		return profileBgImageUrl;
 	}
 
 	public int getNumTweets() {
-		return getInt("statuses_count");
+		return numTweets;
 	}
 
 	public int getFollowersCount() {
-		return getInt("followers_count");
+		return followersCount;
 	}
 
 	public int getFriendsCount() {
-		return getInt("friends_count");
+		return friendsCount;
 	}
 
 	public static User fromJson(JSONObject jo) {
 		User user = new User();
 		try {
-			user.jsonObject = jo;
+			user.name = jo.getString("name");
+			user.uid = jo.getLong("id");
+			user.screenName = jo.getString("screen_name");
+			user.profileImageUrl = jo.getString("profile_image_url");
+			user.profileBgImageUrl = jo.getString("profile_background_image_url");
+			user.numTweets = jo.getInt("statuses_count");
+			user.followersCount = jo.getInt("followers_count");
+			user.friendsCount = jo.getInt("friends_count");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
