@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Menu;
@@ -18,6 +17,7 @@ import android.widget.Toast;
 import com.codepath.apps.mytwitterapp.fragments.HomeTimelineFragment;
 import com.codepath.apps.mytwitterapp.fragments.MentionsFragment;
 import com.codepath.apps.mytwitterapp.models.Tweet;
+import com.codepath.apps.mytwitterapp.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class TimelineActivity extends FragmentActivity {
@@ -26,6 +26,7 @@ public class TimelineActivity extends FragmentActivity {
 	protected ListView lvTweets;
 	protected TweetsAdapter adapter;
 	SmartFragmentStatePagerAdapter adapterViewPager;
+	private User currentUser;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,16 +89,18 @@ public class TimelineActivity extends FragmentActivity {
 		case R.id.action_compose:
 			onComposeTweet();
 			return true;
-//		case R.id.action_profile:
-//			onRefresh();
-//			return true;
+		case R.id.action_profile:
+			onProfileView();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 
-	public void onProfileView(MenuItem mi){
-//		Intent i = new Intent(this, ProfileActivity.class)
+	public void onProfileView() {
+		Intent i = new Intent(this, ProfileActivity.class);
+//		i.putExtra("name", currentUser.getScreenName());
+		startActivity(i);
 	}
 	
 	@Override
@@ -112,7 +115,7 @@ public class TimelineActivity extends FragmentActivity {
 	}
 	
 	public static class MyPagerAdapter extends SmartFragmentStatePagerAdapter {
-	    private static int NUM_ITEMS = 3;
+	    private static int NUM_ITEMS = 2;
 
 	        public MyPagerAdapter(FragmentManager fragmentManager) {
 	            super(fragmentManager);
@@ -132,8 +135,8 @@ public class TimelineActivity extends FragmentActivity {
 	                return HomeTimelineFragment.newInstance("statuses/home_timeline.json");
 	            case 1: 
 	                return MentionsFragment.newInstance("statuses/mentions_timeline.json");
-	            case 2: 
-//	                return SecondFragment.newInstance(2, "Page # 3");
+////	            case 2: 
+////	                return SecondFragment.newInstance(2, "Page # 3");
 	            default:
 	                return null;
 	            }

@@ -9,12 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentRight="true" >
 
         <ImageView
             android:id="@+id/ivProfileImage"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="10dp"
@@ -36,34 +36,15 @@
             android:layout_below="@+id/tvName"
             android:text="Tagline"
             android:textSize="12sp" />
+		
+        
 
-        <fragment
-            android:id="@+id/fragmentUserTimelime"
-            android:name="com.codepath.apps.mytwitterapp.fragments.UserTimelineFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            tools:layout="@layout/fragment_tweets_list" />
+
     </RelativeLayout>
-
-    <!--
-        <fragment
-        android:id="@+id/fragment_tweets"
-        android:name="com.codepath.apps.mytwitterapp.fragments.HomeTimelineFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/llCounts"
-        tools:layout="@layout/fragment_tweets_list" />
-    -->
-
-    <LinearLayout
+<LinearLayout
         android:id="@+id/llCounts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/rlHeader"
-        android:layout_alignTop="@+id/rlHeader"
         android:layout_marginRight="39dp"
         android:layout_marginTop="74dp"
         android:orientation="horizontal" >
@@ -81,5 +62,12 @@
             android:layout_marginLeft="20dp"
             android:text="5 following" />
     </LinearLayout>
-
+    <fragment
+    android:id="@+id/fragmentUserTimelime"
+    android:name="com.codepath.apps.mytwitterapp.fragments.UserTimelineFragment"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_below="@+id/llCounts"
+    tools:layout="@layout/fragment_tweets_list" />
 </RelativeLayout>

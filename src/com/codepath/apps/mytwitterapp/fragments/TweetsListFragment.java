@@ -23,12 +23,12 @@ import com.codepath.apps.mytwitterapp.models.Tweet;
 //import com.dev.apps.devtwitterapp.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-public class TweetsListFragment extends Fragment {
-	ArrayList<Tweet> tweets;
-	ListView lvTweets;
-	TweetsAdapter adapter;
+public abstract class TweetsListFragment extends Fragment {
+	protected ArrayList<Tweet> tweets;
+	protected ListView lvTweets;
+	protected TweetsAdapter tadapter;
 	protected String url;
-	
+//	public long max_id = 0;
 	
 	public static Bundle getArgs(String url) {
         Bundle args = new Bundle();
@@ -36,12 +36,16 @@ public class TweetsListFragment extends Fragment {
         return args;
     }
 
-    // Store instance variables based on arguments passed
-    @Override
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         url = getArguments().getString("url");
     }
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		initList();
+	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inf, ViewGroup parent,
@@ -49,36 +53,32 @@ public class TweetsListFragment extends Fragment {
 		return inf.inflate(R.layout.fragment_tweets_list,parent,false);
 	}
 	
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		initList();
-	}
-	
 	public void initList(){
-		ArrayList<Tweet> tweets = new ArrayList<Tweet>();
-
+		tweets = new ArrayList<Tweet>();
 		lvTweets = (ListView) getActivity().findViewById(R.id.lvTweets);
-		adapter = new TweetsAdapter(getActivity(), tweets);
-		lvTweets.setAdapter(adapter);
+		tadapter = new TweetsAdapter(getActivity(), tweets);
+		
+		tadapter.addAll(tweets);
 		lvTweets.setOnScrollListener(new EndlessScrollListener() {
 			@Override
 			public void onLoadMore(int page, int totalItemsCount) {
-				Tweet lastItem = adapter.getItem(adapter.getCount() - 1);
-				MyTwitterApp.getRestClient().getMoreTweets( lastItem.getUid(), url,
-					new JsonHttpResponseHandler() {
-						@Override
-						public void onSuccess(JSONArray jsonTweets) {
-							adapter.addAll(Tweet.fromJson(jsonTweets));
-							Log.d("DEBUG", jsonTweets.toString());
-						}
-					}
-				);
+				Tweet lastItem = tadapter.getItem(tadapter.getCount() - 1);
+				loadMore(lastItem.getUid());
 			}
 		});
+		
+		lvTweets.setAdapter(tadapter);
 	}
 	
+	void setTweets(JSONArray jsonTweets) {
+		ArrayList<Tweet> tweets = Tweet.fromJson(jsonTweets);
+		tadapter.addAll(tweets);
+		Log.d("DEBUG", jsonTweets.toString());
+	}
+	
+	abstract void loadMore(long max_id);
+	
 	public TweetsAdapter getAdapter() {
-		return adapter;
+		return tadapter;
 	}
 }

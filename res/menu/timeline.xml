@@ -5,7 +5,6 @@
         android:orderInCategory="100"
         android:showAsAction="always"
         android:title="@string/ic_profile"
-		android:onClick="onProfileView"
         android:icon="@drawable/ic_profile"/>
     
     <item

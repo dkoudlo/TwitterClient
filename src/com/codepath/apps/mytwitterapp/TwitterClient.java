@@ -44,6 +44,11 @@ public class TwitterClient extends OAuthBaseClient {
     	client.get(url, null, handler);
     }
     
+    public void getUser(AsyncHttpResponseHandler handler, String urlAppend) {
+    	String url = getApiUrl("users/show.json" + urlAppend);
+    	client.get(url, null, handler);
+    }
+    
     public void getHomeTimeLine(AsyncHttpResponseHandler handler){
     	String url = getApiUrl("statuses/home_timeline.json");
     	client.get(url, null, handler);
@@ -65,7 +70,4 @@ public class TwitterClient extends OAuthBaseClient {
 		params.put("max_id", String.valueOf(max_id - 1L));
 		client.get(getApiUrl(url), params, handler);
 	}
-	
-	
-
 }
