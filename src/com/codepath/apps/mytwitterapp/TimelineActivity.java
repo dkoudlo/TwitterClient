@@ -1,58 +1,62 @@
 package com.codepath.apps.mytwitterapp;
 
-import java.util.ArrayList;
-
 import org.json.JSONArray;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.codepath.apps.mytwitterapp.fragments.HomeTimelineFragment;
+import com.codepath.apps.mytwitterapp.fragments.MentionsFragment;
 import com.codepath.apps.mytwitterapp.models.Tweet;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-public class TimelineActivity extends Activity {
+public class TimelineActivity extends FragmentActivity {
 
 	public static final int REQUEST_CODE = 1;
 	protected ListView lvTweets;
 	protected TweetsAdapter adapter;
+	SmartFragmentStatePagerAdapter adapterViewPager;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_timeline);
-		MyTwitterApp.getRestClient().getHomeTimeLine(
-		new JsonHttpResponseHandler() {
-			@Override
-			public void onSuccess(JSONArray jsonTweets) {
-				ArrayList<Tweet> tweets = Tweet.fromJson(jsonTweets);
+		ViewPager vpPager = (ViewPager) findViewById(R.id.vpPager);
+        adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
+        vpPager.setAdapter(adapterViewPager);
+        
+        vpPager.setOnPageChangeListener(new OnPageChangeListener() {
 
-				lvTweets = (ListView) findViewById(R.id.lvTweets);
-				adapter = new TweetsAdapter(getBaseContext(), tweets);
-				lvTweets.setAdapter(adapter);
-				lvTweets.setOnScrollListener(new EndlessScrollListener() {
-					@Override
-					public void onLoadMore(int page, int totalItemsCount) {
-						Tweet lastItem = adapter.getItem(adapter.getCount() - 1);
-						MyTwitterApp.getRestClient().getMoreTweets( lastItem.getUid(),
-							new JsonHttpResponseHandler() {
-								@Override
-								public void onSuccess(JSONArray jsonTweets) {
-									adapter.addAll(Tweet.fromJson(jsonTweets));
-								}
-							}
-						);
-					}
-				});
+            // This method will be invoked when a new page becomes selected.
+            @Override
+            public void onPageSelected(int position) {
+                Toast.makeText(TimelineActivity.this, 
+                            "Selected page position: " + position, Toast.LENGTH_SHORT).show();
+            }
 
-				Log.d("DEBUG", jsonTweets.toString());
-			}
-		});
+            // This method will be invoked when the current page is scrolled
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // Code goes here
+            }
+
+            // Called when the scroll state changes: 
+            // SCROLL_STATE_IDLE, SCROLL_STATE_DRAGGING, SCROLL_STATE_SETTLING
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                // Code goes here
+            }
+        });
 	}
 
 	@Override
@@ -84,14 +88,18 @@ public class TimelineActivity extends Activity {
 		case R.id.action_compose:
 			onComposeTweet();
 			return true;
-		case R.id.action_refresh:
-			onRefresh();
-			return true;
+//		case R.id.action_profile:
+//			onRefresh();
+//			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 
+	public void onProfileView(MenuItem mi){
+//		Intent i = new Intent(this, ProfileActivity.class)
+	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent i) {
 		if (requestCode == REQUEST_CODE) {
@@ -102,4 +110,40 @@ public class TimelineActivity extends Activity {
 		}
 		super.onActivityResult(requestCode, resultCode, i);
 	}
+	
+	public static class MyPagerAdapter extends SmartFragmentStatePagerAdapter {
+	    private static int NUM_ITEMS = 3;
+
+	        public MyPagerAdapter(FragmentManager fragmentManager) {
+	            super(fragmentManager);
+	        }
+
+	        // Returns total number of pages
+	        @Override
+	        public int getCount() {
+	            return NUM_ITEMS;
+	        }
+
+	        // Returns the fragment to display for that page
+	        @Override
+	        public Fragment getItem(int position) {
+	            switch (position) {
+	            case 0: 
+	                return HomeTimelineFragment.newInstance("statuses/home_timeline.json");
+	            case 1: 
+	                return MentionsFragment.newInstance("statuses/mentions_timeline.json");
+	            case 2: 
+//	                return SecondFragment.newInstance(2, "Page # 3");
+	            default:
+	                return null;
+	            }
+	        }
+
+	        // Returns the page title for the top indicator
+	        @Override
+	        public CharSequence getPageTitle(int position) {
+	            return "Page " + position;
+	        }
+
+	    }
 }

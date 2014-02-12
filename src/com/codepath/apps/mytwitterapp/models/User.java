@@ -18,6 +18,8 @@ public class User extends BaseModel implements Serializable{
 	private int numTweets;
 	private int followersCount;
 	private int friendsCount;
+	private boolean me;
+	private String tagline;
 	
 	public String getName() {
 		return name;
@@ -25,6 +27,10 @@ public class User extends BaseModel implements Serializable{
 	
 	public long getUid() {
 		return uid;
+	}
+	
+	public String getTagline() {
+		return tagline;
 	}
 
 	public String getScreenName() {
@@ -62,6 +68,9 @@ public class User extends BaseModel implements Serializable{
 			user.numTweets = jo.getInt("statuses_count");
 			user.followersCount = jo.getInt("followers_count");
 			user.friendsCount = jo.getInt("friends_count");
+			user.tagline= jo.getString("description");
+			user.me = true;
+//			user.save();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
